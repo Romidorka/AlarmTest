@@ -19,6 +19,7 @@ import android.widget.Button;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+    PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +30,25 @@ public class MainActivity extends AppCompatActivity {
 
         AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
-
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.SECOND, 10);
         long time = calendar.getTimeInMillis();
 
-        PendingIntent pendingIntent = PendingIntent.getService();
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, time,
-                AlarmManager.INTERVAL_HOUR/60, pendingIntent);
+        Intent alarmIntent = new Intent(getApplicationContext(), AlarmActivity.class);
+        alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        pendingIntent = PendingIntent.getActivity(this, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        manager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+//        manager.setRepeating(AlarmManager.RTC_WAKEUP, time,
+//                AlarmManager.INTERVAL_HOUR/60, pendingIntent);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            }
+        });
     }
 
     void makeNotify(String title, String subTitle, String text){

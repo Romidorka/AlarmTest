@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AlarmTest</string>
+    <string name="alarm_text">Примите таблетку</string>
+    <string name="alarm_exit_btn">выключить</string>
 </resources>
